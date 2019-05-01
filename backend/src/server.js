@@ -41,4 +41,4 @@ app.use('/files', express.static(path.resolve(__dirname, '..', 'temp')))
 // Importa o arquivo routes separado
 app.use(require('./routes'));
 
-server.listen(process.env.PORT || 3333);
+server.listen(443);

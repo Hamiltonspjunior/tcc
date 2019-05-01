@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import CadAluno from './components/cadastro_aluno'
-import CadCurso from './components/cadastro_curso'
-import ListCurso from './components/lista_cursos'
+import Home from './components/home'
 
 Vue.use(Router)
 
@@ -14,19 +12,9 @@ export default new Router({
       component: Vue
     },
     {
-      path: '/cadastro-aluno',
-      name: 'Cadastro-Aluno',
-      component: CadAluno
-    },
-    {
-      path: '/cadastro-curso',
-      name: 'Cadastro-Curso',
-      component: CadCurso
-    },
-    {
-      path: '/lista-de-cursos',
-      name: 'Lista-de-cursos',
-      component: ListCurso
+      path: '/home',
+      name: 'Home',
+      component: Home
     }
   ]
 })
