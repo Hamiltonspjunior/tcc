@@ -6,21 +6,23 @@ const Expediente = new mongoose.Schema({
        required: true 
     },
     entrada_manha:{
-        type: Date
+        type: String
     },
     entrada_almoco:{
-        type: Date
+        type: String
     },
     volta_almoco:{
-        type: Date
+        type: String
     },
     saida_expediente:{
-        type: Date
+        type: String
     }
-},{
-    // Crie dois campos em cada registro da tabela/schema
-    // Com a data de criação e de alteração de cada registro
-    timestamps: true
-});
+}
+    /*,{
+        // Crie dois campos em cada registro da tabela/schema
+        // Com a data de criação e de alteração de cada registro
+        timestamps: true
+    }*/
+);
 
 module.exports = mongoose.model('Expediente', Expediente);

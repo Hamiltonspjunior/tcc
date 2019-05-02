@@ -16,6 +16,7 @@ routes.post(
     FileController.store
 );*/
 
-routes.get('/expediente/:id',ExpedienteController.show);
+routes.get('/expediente/:name',ExpedienteController.show);
 routes.post('/expediente',ExpedienteController.store);
+routes.post('/expediente/:name',ExpedienteController.update)
 module.exports = routes;

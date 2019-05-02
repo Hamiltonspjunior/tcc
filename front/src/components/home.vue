@@ -1,30 +1,27 @@
 <template>
     <div id="app">
-        <form @submit.prevent="submitForm">
-            <div class="d-flex">
-              <div>
-                <label for="">Entrada</label><br>
-                <input type="checkbox" :class="[entradaExp == 'ok' ? 'disable' : '']" id="entradaExp" v-model="entradaExp"/>
-              </div>
-              <div>
-                <label for="">Almoço</label><br>
-                <input type="checkbox" class="" id="entradaAlmoco" v-model="entradaAlmoco"/>
-              </div>
-              <div>
-                <label for="">Volta do Almoço</label><br>
-                <input type="checkbox" class="" id="voltaAlmoco" v-model="voltaAlmoco"/>
-              </div>
-              <div>
-                <label for="">Saida</label><br>
-                <input type="checkbox" class="" id="SaidaExp" v-model="saidaExp"/>
-              </div>
-            </div>
-              <button :class="[name ? activeClass : '']" type="submit">Registrar</button>
-            <div>
-            <h3>Response from server:</h3>
-            <pre> {{ entradaExp }} || {{ entradaAlmoco }} || {{ voltaAlmoco }} || || {{ saidaExp }}</pre>
-            </div>
-        </form>
+      <div class="d-flex-column center">
+        <div class="d-flex-column buttons-containers">
+          <label for="nameUsr">Nome Usurio:</label>
+          <input type="text" id="nameUsr" v-model="nameUsr">
+        </div>  
+
+        <div class="d-flex-column buttons-containers">
+          <div><button @click="setEntrada">Entrada</button></div>
+          
+          <div><button @click="setEntradaAlm">Almoço</button></div>
+
+          <div><button @click="setVoltaAlm">Volta Almoço</button></div>
+          
+          <div><button @click="setSaida">Saída</button></div>
+        </div>
+
+        <div>
+          <button @click="getUsuario">Pegar Dados</button>
+          <h3>Response from server:</h3>
+          <pre> {{ dadosUsr }}</pre>
+        </div>
+      </div>
     </div>
 </template>
 <script>
@@ -34,26 +31,73 @@
     name: 'home',
     data() {
       return {
-      name:'Jaiminho',
+      nameUsr:'',
+      dateHour: '',
       entradaExp: '',
       entradaAlmoco: '',
       voltaAlmoco: '',
       saidaExp: '',
       response: '',
+      dadosUsr: '',
       activeClass: 'active'
       }
     },
     methods: {
-      submitForm() {
-        axios.defaults.baseURL ='http://localhost:443'
+      getHour:function(){
+        return this.dateHour = new Date().getHours() + ':' + new Date().getMinutes();
+      },
+      setEntrada: function(){
+        this.entradaManha = this.getHour();
+        axios.defaults.baseURL ='http://localhost:8000'
         axios.post('/expediente', {
-            name: this.name,
+            name: this.nameUsr,
             entrada_manha: this.entradaManha,
             entrada_almoco: this.entradaAlmoco,
             volta_almoco: this.voltaAlmoco,
             saida_expediente: this.saidaExp
         }).then(response => {
             this.response = JSON.stringify(response, null, 2)
+        }).catch(error => {
+            this.response = 'Error: ' + error.response.status
+        })
+      },
+      setEntradaAlm: function(){
+        this.entradaAlmoco = this.getHour();
+        axios.defaults.baseURL ='http://localhost:8000'
+        axios.post('/expediente/'+ this.nameUsr, {
+            entrada_almoco: this.entradaAlmoco
+        }).then(response => {
+            this.response = JSON.stringify(response, null, 2)
+        }).catch(error => {
+            this.response = 'Error: ' + error.response.status
+        })
+      },
+      setVoltaAlm: function(){
+        this.voltaAlmoco = this.getHour();
+        axios.defaults.baseURL ='http://localhost:8000'
+        axios.post('/expediente/'+ this.nameUsr, {
+            volta_almoco: this.voltaAlmoco
+        }).then(response => {
+            this.response = JSON.stringify(response, null, 2)
+        }).catch(error => {
+            this.response = 'Error: ' + error.response.status
+        })
+      },
+      setSaida: function(){
+        this.saidaExp = this.getHour();
+        axios.defaults.baseURL ='http://localhost:8000'
+        axios.post('/expediente/'+ this.nameUsr, {
+            saida_expediente: this.saidaExp
+        }).then(response => {
+            this.response = JSON.stringify(response, null, 2)
+        }).catch(error => {
+            this.response = 'Error: ' + error.response.status
+        })
+      },
+      getUsuario: function(){
+        axios.defaults.baseURL ='http://localhost:8000'
+        axios.get('/expediente/'+ this.nameUsr).then((response) => {
+            this.dadosUsr = response.data
         }).catch(error => {
             this.response = 'Error: ' + error.response.status
         })
@@ -65,8 +109,6 @@
 $primary: #5968d7;
 
 #app {
-  display: flex;
-  justify-content: center;
   font-family: 'Work Sans', sans-serif;
 }
 
@@ -94,10 +136,25 @@ form {
     margin: 20px 0;
   }
 }
+
 .d-flex{
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+.d-flex-column{
+  display: flex;
+  flex-direction: column;
+  &.center{
+    align-items: center;
+  }
+  .buttons-containers{
+    width: 300px;
+    button{
+      margin: 5px 0;
+    }
+  }
 }
 
 button {
