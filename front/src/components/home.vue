@@ -1,28 +1,26 @@
 <template>
-    <div id="app">
-      <div class="d-flex-column center">
-        <div class="d-flex-column buttons-containers">
-          <label for="nameUsr">Nome Usurio:</label>
-          <input type="text" id="nameUsr" v-model="nameUsr">
-        </div>  
+  <div class="d-flex-column center">
+    <div class="d-flex-column buttons-containers">
+      <label for="nameUsr">Nome Usurio:</label>
+      <input type="text" id="nameUsr" v-model="nameUsr">
+    </div>  
 
-        <div class="d-flex-column buttons-containers">
-          <div><button @click="setEntrada">Entrada</button></div>
-          
-          <div><button @click="setEntradaAlm">Almoço</button></div>
+    <div class="d-flex buttons-containers">
+      <a class="btn-ponto" @click="setEntrada"><img src="../assets/images/entrada.svg" alt="" height="100%"></a>
 
-          <div><button @click="setVoltaAlm">Volta Almoço</button></div>
-          
-          <div><button @click="setSaida">Saída</button></div>
-        </div>
+      <a class="btn-ponto" @click="setEntradaAlm"><img src="../assets/images/almoco.svg" alt="" height="100%" ></a>
 
-        <div>
-          <button @click="getUsuario">Pegar Dados</button>
-          <h3>Response from server:</h3>
-          <pre> {{ dadosUsr }}</pre>
-        </div>
-      </div>
+      <a class="btn-ponto" @click="setVoltaAlm"><img src="../assets/images/volta.svg" alt="" height="100%" ></a>
+
+      <a class="btn-ponto" @click="setSaida"><img src="../assets/images/saida.svg" alt="" height="100%" ></a>
     </div>
+
+    <div>
+      <button @click="getUsuario">Pegar Dados</button>
+      <h3>Response from server:</h3>
+      <pre> {{ dadosUsr }}</pre>
+    </div>
+  </div>
 </template>
 <script>
   import axios from 'axios';
@@ -108,10 +106,6 @@
 <style lang="scss" scoped>
 $primary: #5968d7;
 
-#app {
-  font-family: 'Work Sans', sans-serif;
-}
-
 form {
   width: 500px;
   padding: 10px 40px;
@@ -146,35 +140,26 @@ form {
 .d-flex-column{
   display: flex;
   flex-direction: column;
+  width: 100%;
   &.center{
     align-items: center;
   }
   .buttons-containers{
-    width: 300px;
+    align-items:center;
+    justify-content: space-between;
+    width: 50%;
+    
     button{
       margin: 5px 0;
     }
   }
 }
 
-button {
-  color: white;
-  border: none;
-  width: 100%;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  background: #ccc;
-  cursor: pointer;
-  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
-  transition: 0.25s all ease;
-  &:hover {
-    transform: translateY(2px);
-  }
-}
-
-.active {
-  background: $primary;
+.btn-ponto{
+    padding: 20px 0;
+    height: 90px;
+    width: 20%;
+    cursor: pointer;
 }
 
 pre-content {
