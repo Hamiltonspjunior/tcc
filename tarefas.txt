@@ -1,0 +1,27 @@
+{
+    nome:
+    id:
+    tipo:
+    meses : {
+        01: { 
+            diasMes:{
+                1: {
+                    entrada
+                    almoco
+                    volta
+                    saida
+                    }
+                2:
+                3:
+            }
+        }
+    } 
+}
+
+1 - gerar os meses dinamicamente ( ou colocar para o admin cadastrar .)
+
+2 - gerar os dias uteis ( admin cadastrar)
+
+3 - Login por codigo de barra ( 123456789 ) - Sugestão
+
+4 - Gerar objeto preenchido com 00:00

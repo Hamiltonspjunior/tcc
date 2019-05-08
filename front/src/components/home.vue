@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex-column center">
     <div class="d-flex-column buttons-containers">
-      <label for="nameUsr">Nome Usurio:</label>
+      <label for="nameUsr">Nome Usuário:</label>
       <input type="text" id="nameUsr" v-model="nameUsr">
     </div>  
 
