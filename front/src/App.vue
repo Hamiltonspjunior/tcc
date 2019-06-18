@@ -10,8 +10,9 @@ export default {
 }
 </script>
 
-<style>
-#app {
+<style lang="scss">
+@import '../node_modules/bootstrap/dist/css/bootstrap.css';
+/*#app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -22,5 +23,5 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-}
+}*/
 </style>

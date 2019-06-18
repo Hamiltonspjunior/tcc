@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './components/home'
+import Home from './views/Home'
+import Dash from './views/Dashboard'
+import Login from './views/Login'
+import Register from './views/Register'
 
 Vue.use(Router)
 
@@ -8,13 +11,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Vue',
-      component: Vue
-    },
-    {
-      path: '/home',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
     }
   ]
 })

@@ -3,7 +3,7 @@
     <div class="d-flex-column buttons-containers">
       <label for="nameUsr">Nome Usuário:</label>
       <input type="text" id="nameUsr" v-model="nameUsr">
-    </div>  
+    </div>
 
     <div class="d-flex buttons-containers">
       <a class="btn-ponto" @click="setEntrada"><img src="../assets/images/entrada.svg" alt="" height="100%"></a>
@@ -26,7 +26,7 @@
   import axios from 'axios';
 
   export default {
-    name: 'home',
+    name: 'Dashboard',
     data() {
       return {
       nameUsr:'',
@@ -148,7 +148,7 @@ form {
     align-items:center;
     justify-content: space-between;
     width: 50%;
-    
+
     button{
       margin: 5px 0;
     }
