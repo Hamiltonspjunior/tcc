@@ -14,30 +14,26 @@
 
                     <div class="col-lg-12 register-form">
                         <div class="col-lg-12 register-form">
-                            <form>
+                            <form @submit.prevent="setUser">
                                 <div class="form-group">
                                     <label class="form-control-label">Nome</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label">Senha</label>
-                                    <input type="password" class="form-control" i>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-control-label">Confirmação de Senha</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" v-model="name">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label">E-mail</label>
-                                    <input type="text" class="form-control" i>
+                                    <input type="text" class="form-control" v-model="email">
                                 </div>
-
+                                <div class="form-group">
+                                    <label class="form-control-label">Senha</label>
+                                    <input type="password" class="form-control" v-model="password">
+                                </div>
                                 <div class="col-lg-12 registerbttm">
                                     <div class="col-lg-12 register-btm register-text">
                                         <!-- Error Message -->
                                     </div>
+                                    <a @click="setUser"> Set User </a>
                                     <div class="col-lg-12 register-btm register-button">
-                                        <button type="submit" class="btn btn-outline-primary">REGISTRAR</button>
+                                        <button type="submit" class="btn btn-outline-primary" >REGISTRAR</button>
                                     </div>
                                 </div>
                             </form>
@@ -52,7 +48,35 @@
 </template>
 <script>
     export default {
-        name: 'register'
+        name: 'register',
+        data: function(){
+            return{
+                name: '',
+                password: '',
+                email: '',
+                response: ''
+            }
+        },
+        methods:{
+            setUser(){
+                this.$http.post('/auth/register', {
+                    name: this.name,
+                    email: this.email,
+                    password: this.password
+                }).then(response => {
+                    this.response = response
+                    alert('Cadastrado com sucesso');
+                    this.response = response;
+                    console.log(response);
+                     this.$router.push('/login');
+                }).catch(error => {
+                    this.response = 'Error: ' + error.response.status
+                })
+            }
+        },
+        mounted: function(){
+
+        }
     }
 </script>
 <style lang="scss" scoped>

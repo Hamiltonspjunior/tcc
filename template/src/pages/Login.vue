@@ -14,14 +14,14 @@
 
                     <div class="col-lg-12 login-form">
                         <div class="col-lg-12 login-form">
-                            <form>
+                            <form @submit.prevent="logarUser">
                                 <div class="form-group">
                                     <label class="form-control-label">USERNAME</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" v-model="email">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label">PASSWORD</label>
-                                    <input type="password" class="form-control" i>
+                                    <input type="password" class="form-control" v-model="password" i>
                                 </div>
 
                                 <div class="col-lg-12 loginbttm">
@@ -44,7 +44,31 @@
 </template>
 <script>
     export default {
-        name: 'login'
+        name: 'login',
+        data: function() {
+            return {
+                email: '',
+                password: '',
+                response: ''
+            }
+        },
+        methods: {
+            logarUser: function() {
+                this.$http.post('/auth/authenticate', {
+                    email: this.email,
+                    password: this.password
+                }).then(response => {
+                    this.response = response
+                    console.log(response.data);
+                    sessionStorage.tokenUser = response.data.token;
+                    alert('Bem vindo ' + response.data.user.name);
+                    this.$router.push('/dashboard');
+                }).catch(error => {
+                    this.response = 'Error: ' + error.response
+                    alert('Senha incorreta');
+                })
+            }
+        }
     }
 </script>
 <style lang="scss" scoped>

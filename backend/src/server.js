@@ -1,11 +1,10 @@
-// importa o express para o nosso projeto. 
+// importa o express para o nosso projeto.
 // O require acessa alguma depêndencia instalada na aplicação
 const express = require('express');
 const bodyParser = require('body-parser'); // Body parser para tratar os dados enviados e recebidos nas requisições
 
 // Importa a bibliotecaq mongoose, responsável por pormetir trabalhar
 // com os dados do banco usando Js e não linguagem de banco
-const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
 
