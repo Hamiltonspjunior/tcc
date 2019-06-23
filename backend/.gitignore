@@ -1,4 +1,6 @@
 node_modules/
 node_modules
+src/database/index.js
 temp/*
 !temp/.gitkeep
+package-lock.json
