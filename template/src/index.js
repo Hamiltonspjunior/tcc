@@ -7,5 +7,6 @@ app.use(bodyParser.json()); // Tratar os dados como Json
 app.use(bodyParser.urlencoded({ extended: true })); // Tratar dados encode passados via url
 
 require('./controllers/authController')(app);
+require('./controllers/projectController')(app);
 
 app.listen(3000);
