@@ -26,11 +26,6 @@ io.on('connection', socket =>{
     });
 });
 
-mongoose.connect(
-    'mongodb+srv://admin:Ifsp@2019@cluster0-re2z0.mongodb.net/tcc?retryWrites=true&w=majority', 
-    { useNewUrlParser: true }
-);
-
 app.use((req, res, next) => {
     req.io = io;
 
