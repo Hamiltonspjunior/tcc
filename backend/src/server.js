@@ -1,6 +1,7 @@
 // importa o express para o nosso projeto. 
 // O require acessa alguma depêndencia instalada na aplicação
 const express = require('express');
+const bodyParser = require('body-parser'); // Body parser para tratar os dados enviados e recebidos nas requisições
 
 // Importa a bibliotecaq mongoose, responsável por pormetir trabalhar
 // com os dados do banco usando Js e não linguagem de banco
@@ -10,6 +11,11 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json()); // Tratar os dados como Json
+app.use(bodyParser.urlencoded({ extended: true })); // Tratar dados encode passados via url
+
+require('./controllers/authController')(app);
+require('./controllers/projectController')(app);
 
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
@@ -21,7 +27,7 @@ io.on('connection', socket =>{
 });
 
 mongoose.connect(
-    'mongodb+srv://omnistack:omnistack@cluster0-re2z0.mongodb.net/omnistack?retryWrites=true', 
+    'mongodb+srv://admin:Ifsp@2019@cluster0-re2z0.mongodb.net/tcc?retryWrites=true&w=majority', 
     { useNewUrlParser: true }
 );
 

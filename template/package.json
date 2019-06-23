@@ -7,8 +7,7 @@
     "e2e": "node test/e2e/runner.js",
     "lint": "vue-cli-service lint",
     "lint-fix": "vue-cli-service lint --fix",
-    "dev": "vue-cli-service serve --open",
-    "start": "index.js"
+    "dev": "vue-cli-service serve --open"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
