@@ -64,10 +64,11 @@
                     alert('Bem vindo ' + response.data.user.name);
                     this.$router.push('/dashboard');
                 }).catch(error => {
-                    this.response = 'Error: ' + error.response
-                    alert('Senha incorreta');
+                    this.response = 'Error: ' + error.response;
                 })
             }
+        },
+        mounted: function(){
         }
     }
 </script>

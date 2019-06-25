@@ -21,9 +21,9 @@ router.post('/', async(req, res) => {
 });
 
 // Listar todas marcações
-router.get('/', async(req, res) => { 
+router.get('/', async(req, res) => {
     try {
-        const marks = await Mark.find().populate('user');
+        const marks = await Mark.find({user: req.userId}).populate('user');
 
         return res.send({ marks });
 
@@ -33,7 +33,7 @@ router.get('/', async(req, res) => {
 });
 
 // Listar marcação por id
-router.get('/:userId', async(req, res) => { 
+router.get('/:userId', async(req, res) => {
     try {
         const marks = await Mark.findById(req.params.userId).populate('user');
 
@@ -44,11 +44,11 @@ router.get('/:userId', async(req, res) => {
     }
 });
 
-router.put('/:userId', async(req, res) => { 
+router.put('/:userId', async(req, res) => {
     return res.send({ user: req.userId });
 });
 
-router.delete('/:userId', async(req, res) => { 
+router.delete('/:userId', async(req, res) => {
     try {
         await Mark.findByIdAndRemove(req.params.userId);
 

@@ -4,23 +4,24 @@
     <!--Stats cards-->
     <div class="row">
       <div class="col-md-6 col-xl-3" v-for="stats in statsCards" :key="stats.title">
-        <stats-card>
-          <div class="icon-big text-center" :class="`icon-${stats.type}`" slot="header">
-            <i :class="stats.icon"></i>
-          </div>
-          <div class="numbers" slot="content">
-            <p>{{stats.title}}</p>
-            {{stats.value}}
-          </div>
-          <div class="stats" slot="footer">
-            <i :class="stats.footerIcon"></i> {{stats.footerText}}
-          </div>
-        </stats-card>
+        <a @click="getPoint(stats.name)" class="card-button">
+          <stats-card>
+            <div class="icon-big text-center" :class="`icon-${stats.type}`" slot="header">
+              <i :class="stats.icon"></i>
+            </div>
+            <div class="numbers" slot="content">
+              <p>{{stats.title}}</p>
+            </div>
+            <div class="stats" slot="footer">
+              <i :class="stats.footerIcon"></i> {{stats.value}}
+            </div>
+          </stats-card>
+        </a>
       </div>
     </div>
 
     <!--Charts-->
-    
+
 
   </div>
 </template>
@@ -39,41 +40,91 @@ export default {
     return {
       statsCards: [
         {
-          type: "warning",
-          icon: "ti-server",
+          type: "success",
+          icon: "ti-timer",
           title: "Entrada",
+          name: "Entrada",
           value: "",
-          footerText: "Updated now",
-          footerIcon: "ti-reload"
+          footerIcon: "ti-calendar"
         },
         {
-          type: "success",
-          icon: "ti-wallet",
+          type: "info",
+          icon: "ti-timer",
           title: "Almoço",
+          name: "Almoco",
           value: "",
-          footerText: "Last day",
+          footerIcon: "ti-calendar"
+        },
+        {
+          type: "warning",
+          icon: "ti-timer",
+          title: "Volta do almoço",
+          name: "VtAlmoco",
+          value: "",
           footerIcon: "ti-calendar"
         },
         {
           type: "danger",
-          icon: "ti-pulse",
-          title: "Volta do almoço",
-          value: "",
-          footerText: "In the last hour",
-          footerIcon: "ti-timer"
-        },
-        {
-          type: "info",
-          icon: "ti-twitter-alt",
+          icon: "ti-timer",
           title: "Saída",
+          name: "Saida",
           value: "",
-          footerText: "Updated now",
-          footerIcon: "ti-reload"
+          footerIcon: "ti-calendar"
         }
       ],
+      day: new Date().getDate(),
+      month: new Date().getMonth() + 1,
+      year: new Date().getFullYear(),
+      minutes: new Date().getMinutes(),
+      hour:new Date().getHours(),
+      ponto: {}
     };
+  },
+  methods: {
+    getPoint: function(point){
+      switch (point) {
+        case 'Entrada':
+          this.getEnter();
+        break;
+        case 'Almoco':
+          this.getMark();
+        break;
+        case 'VtAlmoco':
+          this.getMark();
+        break;
+        case 'Saida':
+          this.getMark();
+        break;
+
+        default:
+          break;
+      }
+    },
+    getEnter: function(){
+      let fullHour= this.hour + ':' + this.minutes
+      this.ponto = { 'entrada': fullHour }
+      this.$http.post('/mark/', {
+          dia: this.day,
+          mes: this.month,
+          ano: this.year,
+          pontos: this.ponto
+      }).then(response => {
+          this.response = response
+          console.log(response.data);
+          sessionStorage.tokenUser = response.data.token;
+          alert("Sua Hora foi marcada com sucesso !");
+      }).catch(error => {
+          this.response = 'Error: ' + error.response;
+      })
+    }
+  },
+  mounted: function(){
+
   }
 };
 </script>
-<style>
+<style lang="scss" scoped>
+  .card-button{
+    cursor: pointer;
+  }
 </style>
