@@ -45,6 +45,7 @@ export default {
           title: "Entrada",
           name: "Entrada",
           value: "",
+          disabled: "",
           footerIcon: "ti-calendar"
         },
         {
@@ -53,6 +54,7 @@ export default {
           title: "Almoço",
           name: "Almoco",
           value: "",
+          disabled: "",
           footerIcon: "ti-calendar"
         },
         {
@@ -61,6 +63,7 @@ export default {
           title: "Volta do almoço",
           name: "VtAlmoco",
           value: "",
+          disabled: "",
           footerIcon: "ti-calendar"
         },
         {
@@ -69,6 +72,7 @@ export default {
           title: "Saída",
           name: "Saida",
           value: "",
+          disabled: "",
           footerIcon: "ti-calendar"
         }
       ],
@@ -87,13 +91,13 @@ export default {
           this.getEnter();
         break;
         case 'Almoco':
-          this.getMark();
+          this.getMark('almoco');
         break;
         case 'VtAlmoco':
-          this.getMark();
+          this.getMark('volta');
         break;
         case 'Saida':
-          this.getMark();
+          this.getMark('saida');
         break;
 
         default:
@@ -102,16 +106,28 @@ export default {
     },
     getEnter: function(){
       let fullHour= this.hour + ':' + this.minutes
-      this.ponto = { 'entrada': fullHour }
+      this.ponto = {
+        'entrada': fullHour,
+      }
       this.$http.post('/mark/', {
           dia: this.day,
           mes: this.month,
           ano: this.year,
           pontos: this.ponto
       }).then(response => {
-          this.response = response
-          console.log(response.data);
-          sessionStorage.tokenUser = response.data.token;
+          this.response = response;
+          alert("Sua Hora foi marcada com sucesso !");
+      }).catch(error => {
+          this.response = 'Error: ' + error.response;
+      })
+    },
+    getMark: function(point){
+      let fullHour= this.hour + ':' + this.minutes
+      this.ponto = { point: fullHour }
+      this.$http.patch('/mark/', {
+          pontos: this.ponto
+      }).then(response => {
+          this.response = response;
           alert("Sua Hora foi marcada com sucesso !");
       }).catch(error => {
           this.response = 'Error: ' + error.response;

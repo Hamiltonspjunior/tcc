@@ -44,8 +44,25 @@ router.get('/:userId', async(req, res) => {
     }
 });
 
-router.put('/:userId', async(req, res) => {
-    return res.send({ user: req.userId });
+//filtra por ano,  mes , dia e atualiza a marcação
+router.patch('/', async(req, res) => {
+    try {
+        var query = {"ano": req.body.ano, "mes": req.body.mes, "dia": req.body.dia},
+        update = { pontos: req.body.pontos },
+        options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+        // Find the document
+        const marks = await Mark.findOneAndUpdate(query, update, options, function(error, result) {
+        if (error) return;
+
+        // do something with the document
+        });
+
+        return res.send({ Mark });
+
+    } catch (err) {
+        return res.status(400).send({ error: 'Error creating new marking' });
+    }
 });
 
 router.delete('/:userId', async(req, res) => {
