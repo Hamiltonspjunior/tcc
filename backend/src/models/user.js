@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-    },
+    }
 });
 
 // Antes de salvar o usuário criptografa a senha

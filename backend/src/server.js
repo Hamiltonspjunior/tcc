@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // Tratar dados encode passa
 
 require('./controllers/authController')(app);
 require('./controllers/projectController')(app);
+require('./controllers/markController')(app);
 
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
