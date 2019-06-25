@@ -4,7 +4,7 @@
 ### Stable Original Release
 
 ## [2.0.0] 2018-05-01
-## Vue Paper Dashboard Version 2
+## Vue Dashboard Version 2
 - Bootstrap 4 update
   - Migrate components to support BS4 as well as existing scss assets
 - Vue CLI 3 update

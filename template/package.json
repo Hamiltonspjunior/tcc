@@ -1,5 +1,5 @@
 {
-  "name": "vue-paper-dashboard",
+  "name": "vue-dashboard",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -34,7 +34,7 @@
     "typescript": "^3.5.2",
     "vue-template-compiler": "^2.5.17"
   },
-  "description": "A sample admin dashboard based on paper dashboard UI template",
+  "description": "A sample admin dashboard template",
   "author": "cristian.jora <joracristi@gmail.com>",
   "engines": {
     "node": ">= 8.1.4",
