@@ -14,7 +14,7 @@ app.use(bodyParser.json()); // Tratar os dados como Json
 app.use(bodyParser.urlencoded({ extended: true })); // Tratar dados encode passados via url
 
 require('./controllers/authController')(app);
-require('./controllers/projectController')(app);
+require('./controllers/listController')(app);
 require('./controllers/markController')(app);
 
 const server = require('http').Server(app);
@@ -37,9 +37,5 @@ app.use(express.json());
 // Trabalhar com envio de arquivos
 app.use(express.urlencoded( { extended: true } ));
 app.use('/files', express.static(path.resolve(__dirname, '..', 'temp')))
-
-
-// Importa o arquivo routes separado
-app.use(require('./routes'));
 
 server.listen(8000);

@@ -20,43 +20,6 @@ router.post('/', async(req, res) => {
     }
 });
 
-// Listar todas marcações
-router.get('/', async(req, res) => {
-    try {
-        const marks = await Mark.find({user: req.userId}).populate('user');
-
-        return res.send({ marks });
-
-    } catch (err) {
-        return res.status(400).send({ error: 'Error loading markings' });
-    }
-});
-
-// Listar marcação por id
-router.get('/:userId', async(req, res) => {
-    try {
-        const marks = await Mark.findById(req.params.userId).populate('user');
-
-        return res.send({ marks });
-
-    } catch (err) {
-        return res.status(400).send({ error: 'Error loading markings' });
-    }
-});
-
-
-// Listar por range de data, espera o range de data no formato YYYY-MM-DAY string en-US no toLocalString.
-router.get('/range/:userId', async(req, res) => {
-    try {
-        const marks = await Mark.find({user: req.params.userId}).where('date').gt(new Date(req.body.dateStart)).lt(new Date(req.body.dateEnd))
-
-        return res.send({ marks });
-
-    } catch (err) {
-        return res.status(400).send({ error: 'Error loading markings' });
-    }
-});
-
 //atualizar as marcações , passar o id do usuario por parametro , e no body passar date , e a marcação
 router.patch('/', async(req, res) => {
     try {
