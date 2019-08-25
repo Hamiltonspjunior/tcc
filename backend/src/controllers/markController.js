@@ -58,9 +58,9 @@ router.get('/range/:userId', async(req, res) => {
 });
 
 //atualizar as marcações , passar o id do usuario por parametro , e no body passar date , e a marcação
-router.patch('/:userId', async(req, res) => {
+router.patch('/', async(req, res) => {
     try {
-       await Mark.update({user: req.params.userId , date: new Date(req.body.date)},{ $addToSet: { marks: req.body.marks }})
+       await Mark.update({user: req.userId , date: new Date(req.body.date)},{ $addToSet: { marks: req.body.marks }})
 
         return res.send({ message: "Sucesso!"});
 

@@ -3,8 +3,8 @@
 
     <!--Stats cards-->
     <div class="row">
-      <div class="col-md-6 col-xl-3" v-for="stats in statsCards" :key="stats.title">
-        <a @click="getPoint(stats.name)" class="card-button">
+      <div class="col-md-6 col-xl-3" v-for="(stats , index) in statsCards" :key="stats.title">
+        <a @click="(index != 0)?getMark():getEnter()" class="card-button">
           <stats-card>
             <div class="icon-big text-center" :class="`icon-${stats.type}`" slot="header">
               <i :class="stats.icon"></i>
@@ -14,7 +14,7 @@
               <p>{{stats.title}}</p>
             </div>
             <div class="stats" slot="footer">
-              <i :class="stats.footerIcon"></i> {{ getData() }}
+              <i :class="stats.footerIcon"></i> {{ getData('Br') }}
             </div>
           </stats-card>
         </a>
@@ -84,29 +84,10 @@ export default {
     };
   },
   methods: {
-    getPoint: function(point){
-      switch (point) {
-        case 'Entrada':
-          this.getEnter();
-        break;
-        case 'Almoco':
-          this.getMark('almoco');
-        break;
-        case 'VtAlmoco':
-          this.getMark('volta');
-        break;
-        case 'Saida':
-          this.getMark('saida');
-        break;
-      }
-    },
     getEnter: function(){
-      let fullHour = this.getHorario();
-      let fullDate = this.getData();
-
       this.$http.post('/mark/', {
-        date: fullDate,
-        marks: fullHour
+        date: this.getData(),
+        marks: this.getHorario()
       }).then(response => {
           this.response = response;
           alert("Sua Hora foi marcada com sucesso !");
@@ -114,11 +95,11 @@ export default {
           this.response = 'Error: ' + error.response;
       })
     },
-    getMark: function(point){
-      let fullHour= this.getHorario();
 
+    getMark: function(){
       this.$http.patch('/mark/', {
-        marks: fullHour
+        date: this.getData(),
+        marks: this.getHorario()
       }).then(response => {
           this.response = response;
           alert("Sua Hora foi marcada com sucesso !");
@@ -132,9 +113,12 @@ export default {
       return date.toLocaleString('pt-BR',{ hour12: false,hour: "numeric",minute: "numeric"});
     },
 
-    getData: function (){
-      let date = new Date().toISOString().slice(0,10);
-      return date;
+    getData: function (type = "Us"){
+      if(type == "Br"){
+        return new Date().toLocaleDateString('pt-BR', { year: '2-digit', month: '2-digit', day: '2-digit', timeZone: "GMT" })
+      }else{
+        return new Date().toISOString().slice(0,10);
+      }
     }
   },
   mounted: function(){
