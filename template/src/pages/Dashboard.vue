@@ -8,12 +8,13 @@
           <stats-card>
             <div class="icon-big text-center" :class="`icon-${stats.type}`" slot="header">
               <i :class="stats.icon"></i>
+              <p>{{ (getHorario()) }}</p>
             </div>
             <div class="numbers" slot="content">
               <p>{{stats.title}}</p>
             </div>
             <div class="stats" slot="footer">
-              <i :class="stats.footerIcon"></i> {{stats.value}}
+              <i :class="stats.footerIcon"></i> {{ getData() }}
             </div>
           </stats-card>
         </a>
@@ -38,6 +39,10 @@ export default {
    */
   data() {
     return {
+      day: new Date().getDate(),
+      month: new Date().getMonth() + 1,
+      year: new Date().getFullYear(),
+      ponto: {},
       statsCards: [
         {
           type: "success",
@@ -75,13 +80,7 @@ export default {
           disabled: "",
           footerIcon: "ti-calendar"
         }
-      ],
-      day: new Date().getDate(),
-      month: new Date().getMonth() + 1,
-      year: new Date().getFullYear(),
-      minutes: new Date().getMinutes(),
-      hour:new Date().getHours(),
-      ponto: {}
+      ]
     };
   },
   methods: {
@@ -99,21 +98,15 @@ export default {
         case 'Saida':
           this.getMark('saida');
         break;
-
-        default:
-          break;
       }
     },
     getEnter: function(){
-      let fullHour= this.hour + ':' + this.minutes
-      this.ponto = {
-        'entrada': fullHour,
-      }
+      let fullHour = this.getHorario();
+      let fullDate = this.getData();
+
       this.$http.post('/mark/', {
-          dia: this.day,
-          mes: this.month,
-          ano: this.year,
-          pontos: this.ponto
+        date: fullDate,
+        marks: fullHour
       }).then(response => {
           this.response = response;
           alert("Sua Hora foi marcada com sucesso !");
@@ -122,16 +115,26 @@ export default {
       })
     },
     getMark: function(point){
-      let fullHour= this.hour + ':' + this.minutes
-      this.ponto = { point: fullHour }
+      let fullHour= this.getHorario();
+
       this.$http.patch('/mark/', {
-          pontos: this.ponto
+        marks: fullHour
       }).then(response => {
           this.response = response;
           alert("Sua Hora foi marcada com sucesso !");
       }).catch(error => {
           this.response = 'Error: ' + error.response;
       })
+    },
+
+    getHorario: function (){
+      let date = new Date();
+      return date.toLocaleString('pt-BR',{ hour12: false,hour: "numeric",minute: "numeric"});
+    },
+
+    getData: function (){
+      let date = new Date().toISOString().slice(0,10);
+      return date;
     }
   },
   mounted: function(){

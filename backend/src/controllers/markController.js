@@ -44,24 +44,31 @@ router.get('/:userId', async(req, res) => {
     }
 });
 
-//filtra por ano,  mes , dia e atualiza a marcação
-router.patch('/', async(req, res) => {
+
+// Listar por range de data, espera o range de data no formato YYYY-MM-DAY string en-US no toLocalString.
+router.get('/range/:userId', async(req, res) => {
     try {
-        var query = {"ano": req.body.ano, "mes": req.body.mes, "dia": req.body.dia},
-        update = { pontos: req.body.pontos },
-        options = { upsert: true, new: true, setDefaultsOnInsert: true };
+        const marks = await Mark.find({
+            "user" : ObjectId(req.params.userId),
+            "date" :{ $gt:new Date(req.body.dateStart),$lt:new Date(req.body.dateEnd)}});
 
-        // Find the document
-        const marks = await Mark.findOneAndUpdate(query, update, options, function(error, result) {
-        if (error) return;
-
-        // do something with the document
-        });
-
-        return res.send({ Mark });
+        return res.send({ marks });
 
     } catch (err) {
-        return res.status(400).send({ error: 'Error creating new marking' });
+        return res.status(400).send({ error: 'Error loading markings' });
+    }
+});
+
+//atualizar as marcações , passar o id do usuario por parametro , e no body passar date , e a marcação
+router.patch('/:userId', async(req, res) => {
+    try {
+       // await Mark.update({ "user":  ObjectId(req.params.userId), "date" : new Date(req.body.date)},{ $addToSet : { "marks": req.body.marks }});
+        await Mark.collection.find({});
+
+        return res.send({ message: "Sucesso!"});
+
+    } catch (err) {
+        return res.status(400).send({ error: ' === ' + req.params.userId});
     }
 });
 

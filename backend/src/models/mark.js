@@ -6,36 +6,16 @@ const MarkSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    dia: {
-        type: String,
+    date: {
+        type: Date,
         required: true
     },
-    mes: {
-        type: String,
-        required: true
-    },
-    ano: {
-        type: String,
-        required: true
-    },
-    pontos:{
-        type: Object,
-        entrada:{
-            type: String
-        },
-        almoco:{
-            type: String
-        },
-        volta:{
-            type: String
-        },
-        saida:{
-            type: String
-        }
+    marks:{
+        type: Array,
     },
     createdAt: {
         type: Date,
-        default: Date.now,
+        default: Date.now
     }
 });
 
