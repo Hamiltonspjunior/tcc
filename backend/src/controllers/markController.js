@@ -48,9 +48,7 @@ router.get('/:userId', async(req, res) => {
 // Listar por range de data, espera o range de data no formato YYYY-MM-DAY string en-US no toLocalString.
 router.get('/range/:userId', async(req, res) => {
     try {
-        const marks = await Mark.find({
-            "user" : ObjectId(req.params.userId),
-            "date" :{ $gt:new Date(req.body.dateStart),$lt:new Date(req.body.dateEnd)}});
+        const marks = await Mark.find({user: req.params.userId}).where('date').gt(new Date(req.body.dateStart)).lt(new Date(req.body.dateEnd))
 
         return res.send({ marks });
 
@@ -62,13 +60,12 @@ router.get('/range/:userId', async(req, res) => {
 //atualizar as marcações , passar o id do usuario por parametro , e no body passar date , e a marcação
 router.patch('/:userId', async(req, res) => {
     try {
-       // await Mark.update({ "user":  ObjectId(req.params.userId), "date" : new Date(req.body.date)},{ $addToSet : { "marks": req.body.marks }});
-        await Mark.collection.find({});
+       await Mark.update({user: req.params.userId , date: new Date(req.body.date)},{ $addToSet: { marks: req.body.marks }})
 
         return res.send({ message: "Sucesso!"});
 
     } catch (err) {
-        return res.status(400).send({ error: ' === ' + req.params.userId});
+        return res.status(400).send({ error: ' === ' + req.userId});
     }
 });
 
