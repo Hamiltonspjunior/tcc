@@ -1,14 +1,25 @@
 <template>
     <div class="row">
       <div class="col-12">
-        <card class="card-plain" :title="table.title" :subTitle="table.subTitle">
+        <card class="card-plain" :title="title" :subTitle="subTitle">
           <div class="table-full-width table-responsive">
-            <paper-table type="hover" class="text-center" :data="table.data" :columns="table.columns">
-            </paper-table>
+          <table class="table">
+            <thead>
+              <th v-for="column in columns" :key="column">{{column}}</th>
+            </thead>
+            <tbody>
+            <tr v-for="(item, index) in tableData" :key="index">
+              <td>{{ item.date.toLocaleString('pt-BR', { year: '2-digit', month: '2-digit', day: '2-digit', timeZone: "GMT" }) }}</td>
+              <td v-for="mark in item.marks" :key="mark">{{ mark }}</td>
+            </tr>
+            </tbody>
+          </table>
           </div>
         </card>
       </div>
-      <a id="btn-export" class="pull-right hidden-sm hidden-xs" :class="{'disabled':(isLoading||!collection.length)}" @click="exportData" role="button" data-toggle="tooltip" data-placement="left" title="Exportar os dados exibidos na tabela"> Export </a>
+      <p class="text-center export">
+        <a id="btn-export" class="hidden-sm hidden-xs btn-export" :class="{'disabled':(isLoading||!collection.length)}" @click="exportData" role="button" data-toggle="tooltip" data-placement="left" title="Exportar os dados exibidos na tabela"> Export </a>
+      </p>
     </div>
     
 </template>
@@ -16,29 +27,6 @@
 import { PaperTable } from "@/components";
 import XLSX            from 'xlsx';
 import FileSaver       from 'file-saver';
-import moment          from 'moment/'
-
-const tableColumns = ["Data", "Entrada", "Início Almoço", "Fim almoço", "Saída", "Horas trabalhadas", "Diferença"];
-const tableData = [
-  {
-    "data": "01/09/2019",
-    "entrada": "09:00",
-    "início almoço": "12:00",
-    "fim almoço": "13:00",
-    "saída": "18:00",
-    "horas trabalhadas": "08:00",
-    "diferença": "00:00"
-  },
-  {
-    "data": "02/09/2019",
-    "entrada": "08:00",
-    "início almoço": "13:00",
-    "fim almoço": "14:00",
-    "saída": "17:00",
-    "horas trabalhadas": "08:00",
-    "diferença": "05:00"
-  }
-];
 
 export default {
   name: 'export-data',
@@ -58,15 +46,17 @@ export default {
   },
   data() {
     return {
-      table: {
-        title: "Relatório",
-        subTitle: "Veja suas marcações mensais",
-        columns: [...tableColumns],
-        data: [...tableData]
-      }
+      title: "Relatório",
+      subTitle: "Veja suas marcações mensais",
+      columns: ["Data", "Entrada", "Início Almoço", "Fim almoço", "Saída", "Horas trabalhadas", "Diferença"],
+      tableData: []
     };
   },
   methods: {
+    getRange: function(){
+      
+    },
+
     s2ab: function(s) {
         if(typeof ArrayBuffer !== 'undefined') {
             let buf = new ArrayBuffer(s.length);
@@ -153,7 +143,7 @@ export default {
 
         var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary'});
 
-        var fileName = "UOLAds";
+        var fileName = "relatorio";
         if(sessionStorage.sd && sessionStorage.ed){
             fileName += sessionStorage.sd+"-"+sessionStorage.ed;
         }
@@ -162,7 +152,18 @@ export default {
         FileSaver.saveAs(new Blob([this.s2ab(wbout)], { type: 'application/vnd.ms-excel;charset=charset=utf-8' }), fileName);
     },
   },
+  mounted() {
+  this.$http.get('/lists/range/5d62bd0a5b8b3a79488cbb14/?dateStart=2019-01-01&dateEnd=2019-12-30').then(response => {
+          this.tableData = response.data.marks;
+          console.log(this.tableData[0].date);
+      }).catch(error => {
+          console.log('deu ruim');
+          this.response = 'Error: ' + error.response;
+      })
+  },
 };
 </script>
 <style>
+  .export { width: 100%; }
+  .btn-export { cursor: pointer; font-size: 22px; }
 </style>
