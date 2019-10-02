@@ -9,8 +9,11 @@
             </thead>
             <tbody>
             <tr v-for="(item, index) in tableData" :key="index">
-              <td>{{ item.date.toLocaleString('pt-BR', { year: '2-digit', month: '2-digit', day: '2-digit', timeZone: "GMT" }) }}</td>
+              <td>{{ new Date(item.date).toLocaleString('pt-BR', { year: '2-digit', month: '2-digit', day: '2-digit', timeZone: "GMT" }) }}</td>
               <td v-for="mark in item.marks" :key="mark">{{ mark }}</td>
+              <td> {{calcHora(item.marks)}} </td>
+              <td> {{ diffHour( calcHora(item.marks) ) }} </td>
+              <td> {{ calcSal( calcHora(item.marks )) }} </td>
             </tr>
             </tbody>
           </table>
@@ -27,6 +30,7 @@
 import { PaperTable } from "@/components";
 import XLSX            from 'xlsx';
 import FileSaver       from 'file-saver';
+import moment          from 'moment';
 
 export default {
   name: 'export-data',
@@ -48,7 +52,7 @@ export default {
     return {
       title: "Relatório",
       subTitle: "Veja suas marcações mensais",
-      columns: ["Data", "Entrada", "Início Almoço", "Fim almoço", "Saída", "Horas trabalhadas", "Diferença"],
+      columns: ["Data", "Entrada", "Início Almoço", "Fim almoço", "Saída", "Horas trabalhadas", "Diferença", "Sal"],
       tableData: []
     };
   },
@@ -90,28 +94,7 @@ export default {
 
         // Exportação a partir de um array de objetos customizado gerado com dados do filteredCampaigns
         // (Melhor flexibilidade para adicionar ou remover o que vai pra planilha)
-        var data = tableData;
-
-        if (this.type == 'campaigns') {
-            data = this.collection.map((item) => {
-                return {
-                    "Data":       item.data,
-                    "Entrada":     item.entrada
-                };
-            });
-        }
-
-        if (this.type == 'groups') {
-            data = this.collection.map((item)=>{
-                return this.formatGroup(item);
-            });
-        }
-
-        if (this.type == 'creatives') {
-            data = this.collection.map((item)=>{
-                return this.formatCreative(item);
-            });
-        }
+        var data = this.tableData;
 
         var wb = XLSX.utils.book_new();
         var ws = XLSX.utils.json_to_sheet(data);
@@ -127,17 +110,6 @@ export default {
         // excel entende "#,##0" como tipo numerico e usa o delimitador configurado localmente
         // https://docs.sheetjs.com/#cell-object
         var size = data.length+1;
-        if (this.type == 'campaigns') {
-            this.formatCellsCampaign(size, ws);
-        }
-
-        if (this.type == 'groups') {
-            this.formatCellsGroup(size, ws);
-        }
-
-        if (this.type == 'creatives') {
-            this.formatCellsCreative(size, ws);
-        }
 
         XLSX.utils.book_append_sheet(wb, ws, this.datesFromFilter());
 
@@ -151,11 +123,34 @@ export default {
 
         FileSaver.saveAs(new Blob([this.s2ab(wbout)], { type: 'application/vnd.ms-excel;charset=charset=utf-8' }), fileName);
     },
+    calcHora:function(hours){
+      let result = 0;
+      if( hours.length == 4 ){
+        let morning = moment(hours[1],"HH:mm:ss").diff(moment(hours[0],"HH:mm:ss"));
+        let aftermoon = moment(hours[3],"HH:mm:ss").diff(moment(hours[2],"HH:mm:ss"));
+        let result = moment.utc(moment(morning).add(aftermoon, 'ms')).format("HH:mm");
+
+       return result;
+      }else if( hours.length >= 2 && hours.length <= 3 ){
+        console.log('Primeira entrada e saída:' );
+      }else{
+        console.log('Devendo 8 horas');
+      }
+    },
+    diffHour:function(hour){
+      return moment(hour, 'HH:mm:ss').subtract(8, 'h').format("HH:mm");
+    },
+    calcSal:function(hour){
+      let h = parseFloat(hour.split(':')[0]);
+      let m = parseFloat(hour.split(':')[1]);
+      let horaCent = (h + (m / 60) ) * 29;
+
+      console.log( horaCent );
+    }
   },
   mounted() {
   this.$http.get('/lists/range/5d62bd0a5b8b3a79488cbb14/?dateStart=2019-01-01&dateEnd=2019-12-30').then(response => {
           this.tableData = response.data.marks;
-          console.log(this.tableData[0].date);
       }).catch(error => {
           console.log('deu ruim');
           this.response = 'Error: ' + error.response;
