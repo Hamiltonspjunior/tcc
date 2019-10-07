@@ -9,11 +9,6 @@ import "vue-notifyjs/themes/default.css";
 Vue.use(PaperDashboard);
 axios.defaults.baseURL = "http://localhost:8000";
 
-if (window.sessionStorage.tokenUser != "undefined") {
-  axios.defaults.headers.common["Authorization"] =
-    "Bearer " + window.sessionStorage.tokenUser;
-}
-
 Vue.prototype.$http = axios;
 
 /* eslint-disable no-new */

@@ -6,7 +6,12 @@
 </template>
 <script>
 export default {
-  
+  mounted() {
+    if (window.sessionStorage.tokenUser != "undefined") {
+      this.$http.defaults.headers.common["Authorization"] =
+      "Bearer " + window.sessionStorage.tokenUser;
+    }
+  },
 }
 </script>
 <style lang="scss">
