@@ -143,9 +143,9 @@ export default {
     calcSal:function(hour){
       let h = parseFloat(hour.split(':')[0]);
       let m = parseFloat(hour.split(':')[1]);
-      let horaCent = (h + (m / 60) ) * 29;
+      let horaCent = parseFloat( (h + (m / 60) ) * 29 );
 
-      console.log( horaCent );
+      return horaCent.toLocaleString('pt-br', { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' });
     }
   },
   mounted() {
