@@ -49,7 +49,7 @@ router.get('/range/:userId/', async(req, res) => {
 
 router.get('/date/:userId', async(req, res) => {
     try {
-        const marks = await Mark.find({user: req.params.userId }).where({date :new Date(req.body.date)});
+        const marks = await Mark.find({user: req.params.userId }).where({date :new Date(req.query.date)});
 
         return res.send({ marks });
 

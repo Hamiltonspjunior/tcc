@@ -4,11 +4,11 @@
     <!--Stats cards-->
     <div class="row">
       <div class="col-md-6 col-xl-3" v-for="(stats , index) in statsCards" :key="stats.title">
-        <a @click="(index != 0)?getMark():getEnter()" class="card-button">
-          <stats-card>
+        <a @click="(index != 0)?setMark():setEnter()" class="card-button" :class="{ 'disabled': stats.disabled }">
+          <stats-card >
             <div class="icon-big text-center" :class="`icon-${stats.type}`" slot="header">
               <i :class="stats.icon"></i>
-              <p>{{ (getHorario()) }}</p>
+              <p>{{ stats.marks }}</p>
             </div>
             <div class="numbers" slot="content">
               <p>{{stats.title}}</p>
@@ -39,17 +39,13 @@ export default {
    */
   data() {
     return {
-      day: new Date().getDate(),
-      month: new Date().getMonth() + 1,
-      year: new Date().getFullYear(),
-      ponto: {},
       statsCards: [
         {
           type: "success",
           icon: "ti-timer",
           title: "Entrada",
           name: "Entrada",
-          value: "",
+          marks: "",
           disabled: "",
           footerIcon: "ti-calendar"
         },
@@ -58,7 +54,7 @@ export default {
           icon: "ti-timer",
           title: "Almoço",
           name: "Almoco",
-          value: "",
+          marks: "",
           disabled: "",
           footerIcon: "ti-calendar"
         },
@@ -67,7 +63,7 @@ export default {
           icon: "ti-timer",
           title: "Volta do almoço",
           name: "VtAlmoco",
-          value: "",
+          marks: "",
           disabled: "",
           footerIcon: "ti-calendar"
         },
@@ -76,7 +72,7 @@ export default {
           icon: "ti-timer",
           title: "Saída",
           name: "Saida",
-          value: "",
+          marks: "",
           disabled: "",
           footerIcon: "ti-calendar"
         }
@@ -84,7 +80,7 @@ export default {
     };
   },
   methods: {
-    getEnter: function(){
+    setEnter: function(){
       this.$http.post('/mark/', {
         date: this.getData(),
         marks: this.getHorario()
@@ -96,7 +92,7 @@ export default {
       })
     },
 
-    getMark: function(){
+    setMark: function(){
       this.$http.patch('/mark/', {
         date: this.getData(),
         marks: this.getHorario()
@@ -119,15 +115,35 @@ export default {
       }else{
         return new Date().toISOString().slice(0,10);
       }
-    }
+    },
   },
   mounted: function(){
+    this.$http.get('/lists/date/5d6db57b7ff68a611148c0fb/?date='+ this.getData()).then(response => {
+      let data = response.data.marks[0].marks;
+      
+      for (let i = 0; i < data.length; i++){
+        this.statsCards[i].marks = data[i];
+        this.statsCards[i].disabled = true;
+        console.log(data[i]);
+      }
 
+    }).catch(error => {
+      this.response = 'Error: ' + error.response;
+    });
   }
 };
 </script>
 <style lang="scss" scoped>
   .card-button{
     cursor: pointer;
+  }
+  .card-button{
+    &.disabled{
+      pointer-events: none;
+      cursor: default;
+      /deep/.card{
+        opacity: 0.7;
+      }
+    }
   }
 </style>

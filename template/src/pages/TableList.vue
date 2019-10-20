@@ -123,6 +123,7 @@ export default {
 
         FileSaver.saveAs(new Blob([this.s2ab(wbout)], { type: 'application/vnd.ms-excel;charset=charset=utf-8' }), fileName);
     },
+    
     calcHora:function(hours){
       let result = 0;
       if( hours.length == 4 ){
@@ -137,9 +138,11 @@ export default {
         console.log('Devendo 8 horas');
       }
     },
+    
     diffHour:function(hour){
       return moment(hour, 'HH:mm:ss').subtract(8, 'h').format("HH:mm");
     },
+
     calcSal:function(hour){
       let h = parseFloat(hour.split(':')[0]);
       let m = parseFloat(hour.split(':')[1]);
@@ -149,12 +152,11 @@ export default {
     }
   },
   mounted() {
-  this.$http.get('/lists/range/5d62bd0a5b8b3a79488cbb14/?dateStart=2019-01-01&dateEnd=2019-12-30').then(response => {
-          this.tableData = response.data.marks;
-      }).catch(error => {
-          console.log('deu ruim');
-          this.response = 'Error: ' + error.response;
-      })
+    this.$http.get('/lists/range/5d62bd0a5b8b3a79488cbb14/?dateStart=2019-01-01&dateEnd=2019-12-30').then(response => {
+      this.tableData = response.data.marks;
+    }).catch(error => {
+      this.response = 'Error: ' + error.response;
+    })
   },
 };
 </script>

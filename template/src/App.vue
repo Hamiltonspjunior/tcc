@@ -10,6 +10,7 @@ export default {
     if (window.sessionStorage.tokenUser != "undefined") {
       this.$http.defaults.headers.common["Authorization"] =
       "Bearer " + window.sessionStorage.tokenUser;
+      console.log("token save");
     }
   },
 }
