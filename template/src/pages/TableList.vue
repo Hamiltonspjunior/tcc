@@ -134,7 +134,6 @@ export default {
        return result;
       }else if( hours.length >= 2 && hours.length <= 3 ){
         let result = moment(hours[1],"HH:mm:ss").diff(moment(hours[2],"HH:mm:ss"));
-
        return result;
       }else{
         return '8:00';
