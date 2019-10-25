@@ -153,20 +153,7 @@ export default {
     }
   },
   mounted: function() {
-    this.$http.get("/lists/date/5dab6e7ab2d51f2aee4285d4/?date=" + this.getData() + '"')
-        .then(response => {
-          let data = response.data.marks[0].marks;
-          console.log(data);
-          for (let i = 0; i < data.length; i++) {
-            this.statsCards[i].marks = data[i];
-            this.statsCards[i].disabled = true;
-            console.log(data[i]);
-          }
-        })
-        .catch(error => {
-          this.response = "Error: " + error.response;
-          console.log("Deu ruim:", error);
-        });
+    this.getMarks();
   }
 };
 </script>
