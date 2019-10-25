@@ -10,7 +10,7 @@
             <tbody>
             <tr v-for="(item, index) in tableData" :key="index">
               <td>{{ new Date(item.date).toLocaleString('pt-BR', { year: '2-digit', month: '2-digit', day: '2-digit', timeZone: "GMT" }) }}</td>
-              <td v-for="mark in item.marks" :key="mark">{{ mark }}</td>
+              <td v-for="mark in item.marks" :key="mark">{{ (mark != null || mark != undefined)? mark : '00:00' }}</td>
               <td> {{calcHora(item.marks)}} </td>
               <td> {{ diffHour( calcHora(item.marks) ) }} </td>
               <td> {{ calcSal( calcHora(item.marks )) }} </td>
