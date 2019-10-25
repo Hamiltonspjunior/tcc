@@ -144,6 +144,7 @@ export default {
     },
 
     calcSal:function(hour){
+      if(hour === undefined) return;
       let h = parseFloat(hour.split(':')[0]);
       let m = parseFloat(hour.split(':')[1]);
       let horaCent = parseFloat( (h + (m / 60) ) * 29 );
