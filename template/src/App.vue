@@ -12,7 +12,7 @@ export default {
       "Bearer " + window.sessionStorage.tokenUser;
       console.log("token save");
     }
-  },
+  }
 }
 </script>
 <style lang="scss">

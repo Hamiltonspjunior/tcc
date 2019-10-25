@@ -137,7 +137,7 @@ export default {
       }
     },
     getMarks: function() {
-      this.$http.get("/lists/date/5dab6e7ab2d51f2aee4285d4/?date=" + this.getData())
+      this.$http.get("/lists/date?date=" + this.getData())
         .then(response => {
           let data = response.data.marks[0].marks;
           console.log(data);
@@ -154,6 +154,13 @@ export default {
   },
   mounted: function() {
     this.getMarks();
+  },
+  created(){
+    if (window.sessionStorage.tokenUser != "undefined") {
+      this.$http.defaults.headers.common["Authorization"] =
+      "Bearer " + window.sessionStorage.tokenUser;
+      console.log("token save");
+    }
   }
 };
 </script>

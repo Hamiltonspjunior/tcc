@@ -1,5 +1,13 @@
 <template>
     <div class="row">
+      <div class="col-md-6">
+        <fg-input
+          type="text"
+          label="Valor/Hora"
+          placeholder="Informe seu valor/Hora"
+          v-model="valorHora"
+        ></fg-input>
+      </div>
       <div class="col-12">
         <card class="card-plain" :title="title" :subTitle="subTitle">
           <div class="table-full-width table-responsive">
@@ -10,7 +18,7 @@
             <tbody>
             <tr v-for="(item, index) in tableData" :key="index">
               <td>{{ new Date(item.date).toLocaleString('pt-BR', { year: '2-digit', month: '2-digit', day: '2-digit', timeZone: "GMT" }) }}</td>
-              <td v-for="mark in item.marks" :key="mark">{{ (mark.length != 0)? mark : '00:00' }}</td>
+              <td v-for="mark in item.marks" :key="mark">{{ mark }}</td>
               <td> {{calcHora(item.marks)}} </td>
               <td> {{ diffHour( calcHora(item.marks) ) }} </td>
               <td> {{ calcSal( calcHora(item.marks )) }} </td>
@@ -53,7 +61,8 @@ export default {
       title: "Relatório",
       subTitle: "Veja suas marcações mensais",
       columns: ["Data", "Entrada", "Início Almoço", "Fim almoço", "Saída", "Horas trabalhadas", "Diferença", "Sal"],
-      tableData: []
+      tableData: [],
+      valorHora: ""
     };
   },
   methods: {
@@ -125,14 +134,14 @@ export default {
     },
     
     calcHora:function(hours){
-      let result = 0;
-      if( hours.length == 4 ){
+      let result = '00:00';
+      if( hours[0] != null && hours[1] != null && hours[2] != null && hours[3] != null){
         let morning = moment(hours[1],"HH:mm:ss").diff(moment(hours[0],"HH:mm:ss"));
         let aftermoon = moment(hours[3],"HH:mm:ss").diff(moment(hours[2],"HH:mm:ss"));
         let result = moment.utc(moment(morning).add(aftermoon, 'ms')).format("HH:mm");
 
-       return result;
-      }else if( hours.length >= 2 && hours.length <= 3 ){
+        return result;
+      }else if( hours[0] != null && hours[1] ){
         let result = moment.utc(moment(hours[1],"HH:mm:ss").diff(moment(hours[0],"HH:mm:ss"))).format("HH:mm");
         return result;
       }else{
@@ -141,9 +150,17 @@ export default {
     },
     
     diffHour:function(hour){
-      if(hour == 0) return '00:00';
+    
+      let result = 0;
+      if(hour == '00:00') return '00:00';
       if(hour === undefined) return;
-      return moment(hour, 'HH:mm:ss').subtract(8, 'h').format("HH:mm");
+      if( parseFloat(hour) >= 8 ){
+        result = moment.utc(moment(hour, 'HH:mm:ss').diff(moment('08:00',"HH:mm:ss"))).format("HH:mm");
+      }else {
+        result = moment.utc(moment('08:00', 'HH:mm:ss').diff(moment(hour,"HH:mm:ss"))).format("HH:mm");
+      }
+      return result;
+      console.log( result );
     },
 
     calcSal:function(hour){
@@ -152,13 +169,19 @@ export default {
       if(hour === undefined) return;
       let h = parseFloat(hour.split(':')[0]);
       let m = parseFloat(hour.split(':')[1]);
-      let horaCent = parseFloat( (h + (m / 60) ) * 29 );
+      let horaCent = parseFloat( (h + (m / 60) ) * this.valorHora );
 
       return horaCent.toLocaleString('pt-br', { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' });
     }
   },
   mounted() {
-    this.$http.get('/lists/range/5dab6e7ab2d51f2aee4285d4/?dateStart=2019-01-01&dateEnd=2019-12-30').then(response => {
+    this.$http.get('/lists/range?dateStart=2019-10-01&dateEnd=2019-10-30').then(response => {
+      response.data.marks.forEach(function(item){
+          item.marks[0] = item.marks[0] || null;
+          item.marks[1] = item.marks[1] || null;
+          item.marks[2] = item.marks[2] || null;
+          item.marks[3] = item.marks[3] || null;
+      })
       this.tableData = response.data.marks;
     }).catch(error => {
       this.response = 'Error: ' + error.response;
