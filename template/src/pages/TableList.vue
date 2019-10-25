@@ -133,8 +133,8 @@ export default {
 
        return result;
       }else if( hours.length >= 2 && hours.length <= 3 ){
-        let result = moment(hours[1],"HH:mm:ss").diff(moment(hours[2],"HH:mm:ss"));
-       return result;
+        let result = moment.utc(moment(hours[1],"HH:mm:ss").diff(moment(hours[0],"HH:mm:ss"))).format("HH:mm");
+        return result;
       }else{
         return result ;
       }
@@ -158,7 +158,7 @@ export default {
     }
   },
   mounted() {
-    this.$http.get('/lists/range/5d62bd0a5b8b3a79488cbb14/?dateStart=2019-01-01&dateEnd=2019-12-30').then(response => {
+    this.$http.get('/lists/range/5dab6e7ab2d51f2aee4285d4/?dateStart=2019-01-01&dateEnd=2019-12-30').then(response => {
       this.tableData = response.data.marks;
     }).catch(error => {
       this.response = 'Error: ' + error.response;

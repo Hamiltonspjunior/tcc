@@ -2,7 +2,7 @@
   <footer class="footer">
     <div class="container-fluid d-flex flex-wrap justify-content-between">
       <div class="copyright d-flex flex-wrap">
-        Inserir relatório primário aqui
+        
       </div>
     </div>
   </footer>
