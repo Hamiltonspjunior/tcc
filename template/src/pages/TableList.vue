@@ -133,9 +133,11 @@ export default {
 
        return result;
       }else if( hours.length >= 2 && hours.length <= 3 ){
-        console.log('Primeira entrada e saída:' );
+        let result = moment(hours[1],"HH:mm:ss").diff(moment(hours[2],"HH:mm:ss"));
+
+       return result;
       }else{
-        console.log('Devendo 8 horas');
+        return '8:00';
       }
     },
     
