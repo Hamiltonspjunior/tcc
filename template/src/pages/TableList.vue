@@ -136,15 +136,19 @@ export default {
         let result = moment(hours[1],"HH:mm:ss").diff(moment(hours[2],"HH:mm:ss"));
        return result;
       }else{
-        return '8:00';
+        return result ;
       }
     },
     
     diffHour:function(hour){
+      if(hour == 0) return '00:00';
+      if(hour === undefined) return;
       return moment(hour, 'HH:mm:ss').subtract(8, 'h').format("HH:mm");
     },
 
     calcSal:function(hour){
+      let def = 0;
+      if(hour == 0) return def.toLocaleString('pt-br', { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' });
       if(hour === undefined) return;
       let h = parseFloat(hour.split(':')[0]);
       let m = parseFloat(hour.split(':')[1]);
