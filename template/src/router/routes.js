@@ -12,6 +12,7 @@ import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import Login from "@/pages/Login.vue";
 import Register from "@/pages/Register.vue";
+import Admin from "@/pages/Admin.vue";
 
 const routes = [
   {
@@ -53,6 +54,16 @@ const routes = [
         path: "table-list",
         name: "table-list",
         component: TableList
+      },
+      {
+        path: "table-list/:userId",
+        name: "table-list",
+        component: TableList
+      },
+      {
+        path: "admin",
+        name: "admin",
+        component: Admin
       }
     ]
   },

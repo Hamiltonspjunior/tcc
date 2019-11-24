@@ -31,7 +31,6 @@
                                     <div class="col-lg-12 register-btm register-text">
                                         <!-- Error Message -->
                                     </div>
-                                    <a @click="setUser"> Set User </a>
                                     <div class="col-lg-12 register-btm register-button">
                                         <button type="submit" class="btn btn-outline-primary" >REGISTRAR</button>
                                     </div>
