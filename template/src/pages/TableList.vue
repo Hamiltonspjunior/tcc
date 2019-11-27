@@ -45,7 +45,7 @@ import FileSaver       from 'file-saver';
 import moment          from 'moment';
 
 export default {
-  name: 'export-data',
+  name: 'table-list',
   props: {
       isLoading: false,
       collection: {
