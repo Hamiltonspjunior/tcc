@@ -21,7 +21,11 @@
               <td v-for="mark in item.marks" :key="mark">{{ mark }}</td>
               <td> {{calcHora(item.marks)}} </td>
               <td> {{ diffHour( calcHora(item.marks) ) }} </td>
-              <td> {{ calcSal( calcHora(item.marks )) }} </td>
+              <td> {{ calcSal( calcHora(item.marks), index) }} </td>
+            </tr>
+            <tr>
+              <td align="center" colspan="7" class="valorTotalLabel">TOTAL:</td>
+              <td align="center" class="valorTotal">{{ calcSalTotal(salarioTotal) }}</td>
             </tr>
             </tbody>
           </table>
@@ -62,7 +66,8 @@ export default {
       subTitle: "Veja suas marcações mensais",
       columns: ["Data", "Entrada", "Início Almoço", "Fim almoço", "Saída", "Horas trabalhadas", "Diferença", "Sal"],
       tableData: [],
-      valorHora: ""
+      valorHora: "",
+      salarioTotal: []
     };
   },
   methods: {
@@ -163,7 +168,7 @@ export default {
       console.log( result );
     },
 
-    calcSal:function(hour){
+    calcSal:function(hour, i){
       let def = 0;
       if(hour == 0) return def.toLocaleString('pt-br', { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' });
       if(hour === undefined) return;
@@ -171,7 +176,12 @@ export default {
       let m = parseFloat(hour.split(':')[1]);
       let horaCent = parseFloat( (h + (m / 60) ) * this.valorHora );
 
+      this.salarioTotal[i] = horaCent;
+
       return horaCent.toLocaleString('pt-br', { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' });
+    },
+    calcSalTotal:function(sal){
+      return sal.reduce((total, numero) => total + numero, 0).toLocaleString('pt-br', { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' });
     }
   },
   mounted() {
@@ -182,6 +192,11 @@ export default {
           item.marks[2] = item.marks[2] || null;
           item.marks[3] = item.marks[3] || null;
       })
+      response.data.marks.sort(function(a, b) {
+          a = new Date(a.date);
+          b = new Date(b.date);
+          return a>b ? -1 : a<b ? 1 : 0;
+      });
       this.tableData = response.data.marks;
     }).catch(error => {
       this.response = 'Error: ' + error.response;
@@ -192,4 +207,6 @@ export default {
 <style>
   .export { width: 100%; }
   .btn-export { cursor: pointer; font-size: 22px; }
+  .valorTotalLabel, 
+  .valorTotal{ font-size: 16px; font-weight: bolder; }
 </style>

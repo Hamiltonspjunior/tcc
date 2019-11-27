@@ -6,10 +6,12 @@
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel"/>
         <sidebar-link to="/stats" name="Perfil" icon="ti-user"/>
         <sidebar-link to="/table-list" name="Relatório" icon="ti-view-list-alt"/>
-        <sidebar-link to="/typography" name="Sair" icon="ti-text"/>
+        <div class="flex">
+          <button-sair @click.native="exit()"> Sair </button-sair>
+        </div>
       </template>
       <mobile-menu>
-        <li class="nav-item">
+        <!--<li class="nav-item">
           <a class="nav-link">
             <i class="ti-panel"></i>
             <p>Stats</p>
@@ -20,7 +22,7 @@
             <i class="ti-settings"></i>
             <p>Settings</p>
           </a>
-        </li>
+        </li>-->
         <li class="divider"></li>
       </mobile-menu>
     </side-bar>
@@ -42,19 +44,31 @@ import TopNavbar from "./TopNavbar.vue";
 import ContentFooter from "./ContentFooter.vue";
 import DashboardContent from "./Content.vue";
 import MobileMenu from "./MobileMenu";
+import ButtonSair from "../../components/Button.vue";
 export default {
   components: {
     TopNavbar,
     ContentFooter,
     DashboardContent,
-    MobileMenu
+    MobileMenu,
+    ButtonSair
   },
   methods: {
     toggleSidebar() {
       if (this.$sidebar.showSidebar) {
         this.$sidebar.displaySidebar(false);
       }
+    },
+    exit: function(){
+      window.sessionStorage.removeItem('tokenUser');
+      this.$router.push('/login');
     }
   }
 };
 </script>
+<style lang="scss">
+.flex {
+  width: 100%;
+  padding: 25px;
+}
+</style>

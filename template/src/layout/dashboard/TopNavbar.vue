@@ -13,7 +13,7 @@
       </button>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
+          <!--<li class="nav-item">
             <a href="#" class="nav-link">
               <i class="ti-panel"></i>
               <p>Stats</p>
@@ -26,7 +26,7 @@
                 Settings
               </p>
             </a>
-          </li>
+          </li>-->
         </ul>
       </div>
     </div></nav>
