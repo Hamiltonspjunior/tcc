@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6" v-show="!userId">
         <fg-input
           type="text"
           label="Valor/Hora"
@@ -33,7 +33,7 @@
         </card>
       </div>
       <p class="text-center export">
-        <a id="btn-export" class="hidden-sm hidden-xs btn-export" :class="{'disabled':(isLoading||!collection.length)}" @click="exportData" role="button" data-toggle="tooltip" data-placement="left" title="Exportar os dados exibidos na tabela"> Export </a>
+        <a id="btn-export" class="hidden-sm hidden-xs btn-export" @click="exportData" role="button" data-toggle="tooltip" data-placement="left" title="Exportar os dados exibidos na tabela"> Export </a>
       </p>
     </div>
     
@@ -46,17 +46,6 @@ import moment          from 'moment';
 
 export default {
   name: 'table-list',
-  props: {
-      isLoading: false,
-      collection: {
-          type: Array,
-          default: function () {
-              return [];
-          }
-      },
-      type: String,
-      chargingType: String
-  },
   components: {
     PaperTable
   },
@@ -67,14 +56,11 @@ export default {
       columns: ["Data", "Entrada", "Início Almoço", "Fim almoço", "Saída", "Horas trabalhadas", "Diferença", "Sal"],
       tableData: [],
       valorHora: "",
-      salarioTotal: []
+      salarioTotal: [],
+      userId: this.$route.params.userId
     };
   },
   methods: {
-    getRange: function(){
-      
-    },
-
     s2ab: function(s) {
         if(typeof ArrayBuffer !== 'undefined') {
             let buf = new ArrayBuffer(s.length);
@@ -180,27 +166,47 @@ export default {
 
       return horaCent.toLocaleString('pt-br', { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' });
     },
+
     calcSalTotal:function(sal){
       return sal.reduce((total, numero) => total + numero, 0).toLocaleString('pt-br', { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' });
     }
   },
   mounted() {
-    this.$http.get('/lists/range?dateStart=2019-10-01&dateEnd=2019-10-30').then(response => {
-      response.data.marks.forEach(function(item){
-          item.marks[0] = item.marks[0] || null;
-          item.marks[1] = item.marks[1] || null;
-          item.marks[2] = item.marks[2] || null;
-          item.marks[3] = item.marks[3] || null;
+    if(this.userId != undefined) {
+      this.$http.get('/lists/range/'+ this.userId +'/?dateStart=2019-10-01&dateEnd=2020-01-01').then(response => {
+        response.data.marks.forEach(function(item){
+            item.marks[0] = item.marks[0] || null;
+            item.marks[1] = item.marks[1] || null;
+            item.marks[2] = item.marks[2] || null;
+            item.marks[3] = item.marks[3] || null;
+        })
+        response.data.marks.sort(function(a, b) {
+            a = new Date(a.date);
+            b = new Date(b.date);
+            return a>b ? -1 : a<b ? 1 : 0;
+        });
+        this.tableData = response.data.marks;
+      }).catch(error => {
+        this.response = 'Error: ' + error.response;
       })
-      response.data.marks.sort(function(a, b) {
-          a = new Date(a.date);
-          b = new Date(b.date);
-          return a>b ? -1 : a<b ? 1 : 0;
-      });
-      this.tableData = response.data.marks;
-    }).catch(error => {
-      this.response = 'Error: ' + error.response;
-    })
+    }else{
+      this.$http.get('/lists/range?dateStart=2019-10-01&dateEnd=2020-01-01').then(response => {
+        response.data.marks.forEach(function(item){
+            item.marks[0] = item.marks[0] || null;
+            item.marks[1] = item.marks[1] || null;
+            item.marks[2] = item.marks[2] || null;
+            item.marks[3] = item.marks[3] || null;
+        })
+        response.data.marks.sort(function(a, b) {
+            a = new Date(a.date);
+            b = new Date(b.date);
+            return a>b ? -1 : a<b ? 1 : 0;
+        });
+        this.tableData = response.data.marks;
+      }).catch(error => {
+        this.response = 'Error: ' + error.response;
+      })
+    }
   },
 };
 </script>

@@ -32,6 +32,19 @@ router.get('/range', async (req, res) => {
     }
 });
 
+
+// Listar por range de data, espera o range de data no formato YYYY-MM-DAY string en-US no toLocalString.
+router.get('/range/:userId', async (req, res) => {
+    try {
+        const marks = await Mark.find({ user: req.params.userId }).where('date').gt(new Date(req.query.dateStart)).lt(new Date(req.query.dateEnd)).populate('MarksRage');
+
+        return res.send({ marks });
+
+    } catch (err) {
+        return res.status(400).send({ error: 'blablabla' });
+    }
+});
+
 // Listar por data, espera data no formato YYYY-MM-DAY string en-US no toLocalString.
 
 router.get('/date', async (req, res) => {

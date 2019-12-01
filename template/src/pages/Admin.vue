@@ -8,9 +8,10 @@
               <th v-for="column in columns" :key="column">{{column}}</th>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in tableData" :key="index">
-                <td>{{ item.name }}</td>
-                <td><a class="btn btn-round btn-info" :href="'table-list/'+item.user_id">Relatorios</a></td>
+            <tr v-for="(user, index) in  users" :key="index">
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.email }}</td>
+                <td><a class="btn btn-round btn-info" :href="'table-list/'+user._id">Relatorios</a></td>
             </tr>
             </tbody>
           </table>
@@ -26,14 +27,25 @@ export default {
     name: 'admin',
     data() {
         return {
+            users: '',
             title: "Funcionarios",
             subTitle: "Veja todos seus funcionarios",
-            columns: ["Nome", "Relatorio"],
-            tableData: [{name:"Zezinho",user_id:"54545454"}]
+            columns: ["Nome","Email","Relatorio"]
         };
     },
-    methods: {
-        
+    methods: {     
+      getUsers: function() {
+        this.$http.get('/users').then(response => {
+            this.users = response.data.user;
+          })
+          .catch(error => {
+            this.response = "Error: " + error.response;
+            console.log("Deu ruim:", error);
+          });
+      }
+    },
+    mounted: function() {
+      this.getUsers();
     }
 }
 </script>

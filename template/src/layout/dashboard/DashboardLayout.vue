@@ -6,6 +6,7 @@
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel"/>
         <sidebar-link to="/stats" name="Perfil" icon="ti-user"/>
         <sidebar-link to="/table-list" name="Relatório" icon="ti-view-list-alt"/>
+        <sidebar-link to="/admin" name="Admin" icon="ti-view-list-alt"/>
         <div class="flex">
           <button-sair @click.native="exit()"> Sair </button-sair>
         </div>
