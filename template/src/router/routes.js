@@ -13,6 +13,7 @@ import TableList from "@/pages/TableList.vue";
 import Login from "@/pages/Login.vue";
 import Register from "@/pages/Register.vue";
 import Admin from "@/pages/Admin.vue";
+import Occurrence from "@/pages/Occurrence.vue";
 
 const routes = [
   {
@@ -64,6 +65,11 @@ const routes = [
         path: "admin",
         name: "admin",
         component: Admin
+      },
+      {
+        path: "Occurrence",
+        name: "Ocorrência",
+        component: Occurrence
       }
     ]
   },
