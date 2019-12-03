@@ -94,14 +94,34 @@ export default {
 
         // Exportação a partir de um array de objetos customizado gerado com dados do filteredCampaigns
         // (Melhor flexibilidade para adicionar ou remover o que vai pra planilha)
-        var data = this.tableData;
+        let relatorio = JSON.parse(JSON.stringify(this.tableData));
+
+        relatorio.forEach((obj, i) => {
+            obj.data = new Date(obj.date).toLocaleString('pt-BR', { year: '2-digit', month: '2-digit', day: '2-digit', timeZone: "GMT" });
+            obj.entrada = obj.marks[0] || null;
+            obj.almoço = obj.marks[1] || null;
+            obj.voltaAlmoco = obj.marks[2] || null;
+            obj.saida = obj.marks[3] || null;
+            
+            const calc =  this.calcHora(obj.marks);
+            obj.horasTrablahadas = calc;
+            obj.diferenca = this.diffHour( calc );
+            obj.salario =this.calcSal( calc, i);
+
+            delete obj.marks;
+            delete obj.createdAt;
+            delete obj._id;
+            delete obj.__v;
+            delete obj.user;
+        });
+        
 
         var wb = XLSX.utils.book_new();
-        var ws = XLSX.utils.json_to_sheet(data);
+        var ws = XLSX.utils.json_to_sheet(relatorio);
 
         //larguras das colunas
         ws['!cols'] = [{wch : 25}];
-        var index = Object.keys(data[0]).length;
+        var index = Object.keys(relatorio[0]).length;
         for (var i = 1; i <= index; i++) {
             ws['!cols'].push({wch : 15});
         }
@@ -109,7 +129,7 @@ export default {
         // Altera a formatação dos campos CTR, CPC e Custo para tipo numerico
         // excel entende "#,##0" como tipo numerico e usa o delimitador configurado localmente
         // https://docs.sheetjs.com/#cell-object
-        var size = data.length+1;
+        var size = relatorio.length+1;
 
         XLSX.utils.book_append_sheet(wb, ws, this.datesFromFilter());
 
@@ -147,10 +167,12 @@ export default {
       if(hour === undefined) return;
       if( parseFloat(hour) >= 8 ){
         result = moment.utc(moment(hour, 'HH:mm:ss').diff(moment('08:00',"HH:mm:ss"))).format("HH:mm");
+        return '+ '+ result;
       }else {
         result = moment.utc(moment('08:00', 'HH:mm:ss').diff(moment(hour,"HH:mm:ss"))).format("HH:mm");
+
+        return '- '+ result;
       }
-      return result;
       console.log( result );
     },
 
@@ -171,7 +193,7 @@ export default {
       return sal.reduce((total, numero) => total + numero, 0).toLocaleString('pt-br', { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' });
     }
   },
-  mounted() {
+  created() {
     if(this.userId != undefined) {
       this.$http.get('/lists/range/'+ this.userId +'/?dateStart=2019-10-01&dateEnd=2020-01-01').then(response => {
         response.data.marks.forEach(function(item){
@@ -203,6 +225,8 @@ export default {
             return a>b ? -1 : a<b ? 1 : 0;
         });
         this.tableData = response.data.marks;
+        console.log('Oie');
+        console.log(this.tableData);
       }).catch(error => {
         this.response = 'Error: ' + error.response;
       })
