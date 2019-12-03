@@ -148,7 +148,6 @@ export default {
         })
         .catch(error => {
           this.response = "Error: " + error.response;
-          console.log("Deu ruim:", error);
         });
     }
   },

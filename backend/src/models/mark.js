@@ -11,7 +11,10 @@ const MarkSchema = new mongoose.Schema({
         required: true
     },
     marks:{
-        type: Array,
+        type: Array
+    },
+    occurrence:{
+        type: String
     },
     createdAt: {
         type: Date,

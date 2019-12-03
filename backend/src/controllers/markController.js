@@ -32,6 +32,19 @@ router.patch('/', async(req, res) => {
     }
 });
 
+
+
+router.patch('/occurrence', async(req, res) => {
+    try {
+       await Mark.updateOne({user: req.userId , date: new Date(req.body.date)},{ $set: { occurrence: req.body.occurrence }})
+
+        return res.send({ message: "Sucesso!"});
+
+    } catch (err) {
+        return res.status(400).send({ error: ' === ' + req.userId});
+    }
+});
+
 router.delete('/:userId', async(req, res) => {
     try {
         await Mark.findByIdAndRemove(req.params.userId);
