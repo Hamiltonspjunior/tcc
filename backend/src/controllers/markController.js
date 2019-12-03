@@ -37,7 +37,7 @@ router.patch('/', async(req, res) => {
 router.patch('/occurrence', async(req, res) => {
     try {
        await Mark.updateOne({user: req.userId , date: new Date(req.body.date)},{ $set: { occurrence: req.body.occurrence }})
-
+        console.log(req.body.occurrence);
         return res.send({ message: "Sucesso!"});
 
     } catch (err) {
