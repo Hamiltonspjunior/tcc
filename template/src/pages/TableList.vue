@@ -22,9 +22,11 @@
               <td> {{calcHora(item.marks)}} </td>
               <td> {{ diffHour( calcHora(item.marks) ) }} </td>
               <td> {{ calcSal( calcHora(item.marks), index) }} </td>
+              <td v-if="userId">{{ item.occurrence }}</td>
             </tr>
             <tr>
-              <td align="center" colspan="7" class="valorTotalLabel">TOTAL:</td>
+              <td align="center" colspan="8" v-if="userId" class="valorTotalLabel">TOTAL:</td>
+              <td align="center" colspan="7" v-if="!userId" class="valorTotalLabel">TOTAL:</td>
               <td align="center" class="valorTotal">{{ calcSalTotal(salarioTotal) }}</td>
             </tr>
             </tbody>
@@ -208,6 +210,7 @@ export default {
             return a>b ? -1 : a<b ? 1 : 0;
         });
         this.tableData = response.data.marks;
+        this.columns.push("Ocorrência");
       }).catch(error => {
         this.response = 'Error: ' + error.response;
       })
@@ -225,7 +228,6 @@ export default {
             return a>b ? -1 : a<b ? 1 : 0;
         });
         this.tableData = response.data.marks;
-        console.log('Oie');
         console.log(this.tableData);
       }).catch(error => {
         this.response = 'Error: ' + error.response;
