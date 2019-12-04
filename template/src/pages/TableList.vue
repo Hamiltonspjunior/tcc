@@ -104,17 +104,20 @@ export default {
             obj.almoço = obj.marks[1] || null;
             obj.voltaAlmoco = obj.marks[2] || null;
             obj.saida = obj.marks[3] || null;
-            
+            obj.ocorrencia = obj.occurrence;
+
             const calc =  this.calcHora(obj.marks);
             obj.horasTrablahadas = calc;
             obj.diferenca = this.diffHour( calc );
             obj.salario =this.calcSal( calc, i);
 
             delete obj.marks;
+            delete obj.date;
             delete obj.createdAt;
             delete obj._id;
             delete obj.__v;
             delete obj.user;
+            delete obj.occurrence;
         });
         
 

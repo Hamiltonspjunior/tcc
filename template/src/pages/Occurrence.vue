@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import moment          from 'moment';
 export default {
     name: 'Occurrence',
     data() {
@@ -42,9 +43,11 @@ export default {
     },
     methods: {     
         setOccurrence: function(){
+            let data = moment(this.dateOc, "DD/MM/YYYY").format('YYYY-MM-DD');
+            console.log(data);
             this.$http
                 .patch("/mark/occurrence", {
-                    date: new Date(this.dateOc),
+                    date: data,
                     occurrence: this.occurrence
                 })
                 .then(response => {
